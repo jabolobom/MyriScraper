@@ -32,7 +32,7 @@ export-env {
       }
     }
 
-    let virtual_env = '/home/philippsen/Documents/code/psx_down/.venv'
+    let virtual_env = '/home/philippsen/Documents/code/scripted_download/.venv'
     let bin = 'bin'
 
     let is_windows = ($nu.os-info.family) == 'windows'

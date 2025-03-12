@@ -1,4 +1,4 @@
-#!/home/philippsen/Documents/code/psx_down/.venv/bin/python
+#!/home/philippsen/Documents/code/scripted_download/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

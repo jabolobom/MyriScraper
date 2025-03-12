@@ -1,2 +1,5 @@
-# created by virtualenv automatically
-*
+# created by virtualenv automaticall
+.idea/
+Lib/
+Scripts/
+.venv/

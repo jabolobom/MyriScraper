@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+
+<body>
+<div class="top-bar"><h1 class=".VCROSD">SCRIPTED DOWNLOADER</h1></div>
+<div class="main">
+    <div class="side-bar">
+        <fieldset>
+        <label for="psx"><input type="checkbox" id="psx" value="psx" checked/>PSX</label>
+        <br>
+        <label for="ps2">  <input type="checkbox" id="ps2" value="ps2"/>PS2</label>
+        <br>
+        <label for="n64"> <input type="checkbox" id="n64" value="n64"/>N64</label>
+        <br>
+        </fieldset>
+    </div>
+    <div class="search-section">
+        <form method="POST" action="/search">
+            <input type="text" class="search-bar" name= "gametitle" placeholder="Enter a game title"></input>
+        </form>
+    <div class="results">
+        {% if results %}
+            {% for title, url in results %}
+                <div class="result-card">
+                    <h3>{{ title }}</h3>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
