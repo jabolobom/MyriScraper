@@ -1,15 +1,13 @@
 from flask import render_template
 from flask import Flask, request
-import requests
+import requests, threading, os
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
-import threading
 
 url_dictionary = dict()
 result_list = list()
 PSX_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/"
-threads = {}
 
 try:
     response = requests.get(PSX_url) # TEMPORARY, CHANGE THIS!!!!!!!!!!!1
@@ -27,6 +25,7 @@ for element in links:
 
 print("dictionary created")
 
+
 def title_search(user_search: str):
     result_list.clear()
     substring_results = [title for title in url_dictionary.keys() if user_search.upper() in title]
@@ -43,16 +42,34 @@ def title_search(user_search: str):
         print("No results found") # PLACEHOLDER !!!!!!!!!!!!!!!!!!!
         return
 
+
 def title_downloader(title, save_path):
     download = requests.get(url_dictionary[title])
-    with open(save_path, 'wb') as file:
+    fullpath = os.path.join(save_path, title)
+
+    if not download:
+        print("download error")
+        return
+
+    with open(fullpath, 'wb') as file:
         file.write(download.content)
 
-def download_request(selected, save_path):
+
+def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILES, MESMO SENDO 1 SÓ !!!!!!!!!!!!!!
+    threads = {}
+
+    if type(selected) != list:
+        print("ERROR: NOT A LIST! BREAKING PROCESS")
+        return
+
     for i in selected:
         threads[i] = threading.Thread(target=title_downloader, args=(i, save_path))
+        print(f"NEW THREAD FILE: {i}")
     for i in selected:
         threads[i].start()
-        for i in selected:
-            threads[i].join()
-        print("finished")
+        print(f"DOWNLOAD STARTED FILE: {i}")
+    for i in selected:
+        threads[i].join()
+        print(f"\nfinished downloading {i} to {save_path}")
+
+download_request(["TEKKEN 3 (USA).ZIP"],"C:\\Users\\Bruno\\Documents\\code\\scripted_download")
