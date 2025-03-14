@@ -18,6 +18,7 @@
         <label for="n64"> <input type="checkbox" id="n64" value="n64"/>N64</label>
         <br>
         </fieldset>
+        <div class="settings-section"></div>
     </div>
     <div class="search-section">
         <form method="POST" action="/search">
@@ -28,6 +29,7 @@
             {% for title, url in results %}
                 <div class="result-card">
                     <h3>{{ title }}</h3>
+                    <label onclick="">ADD TO DOWNLOAD QUEUE</label>
                 </div>
             {% endfor %}
         {% endif %}
