@@ -1,6 +1,6 @@
 from flask import render_template
 from flask import Flask, request
-import requests
+import requests, webview, threading, sys
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
@@ -58,5 +58,16 @@ def search():
     print(search_results)
     return render_template("home.html", results=search_results)
 
+
+def start_flask():
+    app.run(host="0.0.0.0", port=7777, debug=False)
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7777, debug=True)
+    
+    t = threading.Thread(target=start_flask)
+    t.daemon = True
+    t.start()
+
+    window = webview.create_window("Scripted Download", "http://127.0.0.1:7777")
+    webview.start() # trava a execução do código pós isso
+    sys.exit()
