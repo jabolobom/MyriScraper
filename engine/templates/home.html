@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
 </head>
 
 <body>
@@ -18,7 +19,10 @@
         <label for="n64"> <input type="checkbox" id="n64" value="n64"/>N64</label>
         <br>
         </fieldset>
-        <div class="settings-section"></div>
+        <div class="settings-section">
+            <div class="directory-selection"></div>
+            <div class="download-start">start download</div>
+        </div>
     </div>
     <div class="search-section">
         <form method="POST" action="/search">

@@ -133,7 +133,7 @@ label{
     width: 99%;
     height: 10%;
     margin: 10px;
-    font-size: 20px;
+    font-size: 15px;
     border: 2px solid black;
 }
 
@@ -144,10 +144,10 @@ label{
 .result-card label{
     margin-left: 50px;
     margin-right: 10px;
-    font-size: 20px;
+    font-size: 12px;
     background-color: #F8F1EF;
     border: 3px solid black;
-    padding: 5px;
+    padding: 3px;
     transition: transform 0.1s ease, background 0.1s ease;
 }
 
@@ -158,5 +158,3 @@ label{
 .result-card label:active{
     transform: scale(0.9);
 }
-
-

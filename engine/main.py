@@ -1,5 +1,4 @@
-from flask import render_template
-from flask import Flask, request
+from flask import Flask, request, jsonify, render_template
 import requests, webview, threading, sys
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
@@ -58,9 +57,12 @@ def search():
     print(search_results)
     return render_template("home.html", results=search_results)
 
-@app.route('/download')
+@app.route('/download', methods=["POST"])
 def download():
-    ...
+    received = request.get_json()
+    print(received)
+
+    return jsonify({"status:": "download fuunction executed"}), 200
 
 
 def start_flask():
@@ -73,5 +75,5 @@ if __name__ == "__main__":
     t.start()
 
     window = webview.create_window("Scripted Download", "http://127.0.0.1:7777")
-    webview.start() # trava a execução do código pós isso
+    webview.start(debug=True) # trava a execução do código pós isso
     sys.exit()
