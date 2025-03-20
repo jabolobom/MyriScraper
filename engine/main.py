@@ -58,6 +58,10 @@ def search():
     print(search_results)
     return render_template("home.html", results=search_results)
 
+@app.route('/download')
+def download():
+    ...
+
 
 def start_flask():
     app.run(host="0.0.0.0", port=7777, debug=False)

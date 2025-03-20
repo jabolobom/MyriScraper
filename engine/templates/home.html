@@ -29,7 +29,7 @@
             {% for title, url in results %}
                 <div class="result-card">
                     <h3>{{ title }}</h3>
-                    <label onclick="">ADD TO DOWNLOAD QUEUE</label>
+                    <label onclick="addQueue('{{ title }}')">ADD TO DOWNLOAD QUEUE</label>
                 </div>
             {% endfor %}
         {% endif %}
