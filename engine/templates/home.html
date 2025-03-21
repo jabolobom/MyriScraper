@@ -21,7 +21,7 @@
         </fieldset>
         <div class="settings-section">
             <div class="directory-selection"></div>
-            <div class="download-start">start download</div>
+            <div class="download-start" onclick="downloadButton()">start download</div>
         </div>
     </div>
     <div class="search-section">
@@ -33,7 +33,7 @@
             {% for title, url in results %}
                 <div class="result-card">
                     <h3>{{ title }}</h3>
-                    <label onclick="addQueue('{{ title }}')">ADD TO DOWNLOAD QUEUE</label>
+                    <label data-title="{{ title }}" onclick="addQueue(this.dataset.title)">ADD TO DOWNLOAD QUEUE</label>
                 </div>
             {% endfor %}
         {% endif %}

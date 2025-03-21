@@ -60,7 +60,8 @@ def search():
 @app.route('/download', methods=["POST"])
 def download():
     received = request.get_json()
-    print(received)
+    for x in received:
+        print(x)
 
     return jsonify({"status:": "download fuunction executed"}), 200
 

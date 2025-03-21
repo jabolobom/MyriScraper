@@ -1,13 +1,13 @@
 var downloadlist = JSON.parse(localStorage.getItem("downloadlist")) || []; // array de titulos, salva no localStorage
 
 function addQueue (title_name) { // adds titles to queue, no duplicates.
-    console.log(`trying to add ${title_name} to queue`)
+    console.log(`trying to add ${JSON.stringify(title_name)} to queue`)
 
     if (downloadlist.includes(title_name)){
-        console.log(`${title_name} already in queue`);
+        console.log(`${JSON.stringify(title_name)} already in queue`);
     }
     else {
-        downloadlist.push(title_name)
+        downloadlist.push(String(title_name)) // needs to be str only
         localStorage.setItem("downloadlist", JSON.stringify(downloadlist)) // salva no local storage
         console.log(`New download queue: ${downloadlist.toString()}`);
     };
@@ -17,19 +17,23 @@ async function downloadButton(download_array){
   // sends title json to backend 
   try {
     const rqst = new Request("/download", {
-      method: "POST",
-      body: JSON.stringify(downloadlist),
+        method: "POST",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(downloadlist),
     });
   
     const response = await fetch(rqst);
 
     if(!response.ok){
-      throw new Error(`Error, Status: ${response.status}`;)    
+      throw new Error(`Error, Status: ${response.status}`);
     }
 
     const result = await response.json();
     console.log("Server resp:", result);
-    // function body
+    localStorage.removeItem("downloadlist");
+    downloadlist.length = 0;
   } catch (error) {
     console.error("error:", error);
   }
