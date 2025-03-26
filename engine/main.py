@@ -7,6 +7,9 @@ from fuzzywuzzy import process
 url_dictionary = dict()
 result_list = list()
 PSX_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/"
+sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/", 
+           'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
+           'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
 
 try:
     response = requests.get(PSX_url) # TEMPORARY, CHANGE THIS!!!!!!!!!!!1
