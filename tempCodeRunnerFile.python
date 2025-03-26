@@ -1,0 +1,5 @@
+import os
+
+
+
+out = os.path.isdir("engine/")

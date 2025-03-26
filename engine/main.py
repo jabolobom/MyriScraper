@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import requests, webview, threading, sys
+import requests, webview, threading, sys, os
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
@@ -22,7 +22,18 @@ for element in links:
 
         url_dictionary[gameTitle] = truelink # title : download-link
 
+
+if os.path.isdir('downloads/'):
+    print(f"Downloads folder exists. Continuing...")
+else:
+    os.mkdir('downloads/')
+    print(f"Downloads directory not found, directory created")
+
+download_path = 'downloads/'
+
+
 print("dictionary created")
+
 
 def title_search(user_search: str):
     result_list.clear()
@@ -39,12 +50,43 @@ def title_search(user_search: str):
     else:
         print("No results found") # PLACEHOLDER !!!!!!!!!!!!!!!!!!!
         return
+    
+
+def title_downloader(title, save_path):
+    download = requests.get(url_dictionary[title])
+    fullpath = os.path.join(save_path, title)
+
+    if not download:
+        print("download error")
+        return
+
+    with open(fullpath, 'wb') as file:
+        file.write(download.content)
+
+
+def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILES, MESMO SENDO 1 SÓ !!!!!!!!!!!!!!
+    threads = {}
+
+    if type(selected) != list:
+        print("ERROR: NOT A LIST! BREAKING PROCESS")
+        return
+
+    for i in selected:
+        threads[i] = threading.Thread(target=title_downloader, args=(i.upper(), save_path))
+        print(f"NEW THREAD FILE: {i}")
+    for i in selected:
+        threads[i].start()
+        print(f"DOWNLOAD STARTED FILE: {i}")
+    for i in selected:
+        threads[i].join()
+        print(f"\nfinished downloading {i} to {save_path}")
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return render_template("home.html")
+
 
 @app.route('/search', methods=["POST"])
 def search():
@@ -57,17 +99,18 @@ def search():
     print(search_results)
     return render_template("home.html", results=search_results)
 
+
 @app.route('/download', methods=["POST"])
 def download():
     received = request.get_json()
-    for x in received:
-        print(x)
+    download_request(received, download_path)
 
     return jsonify({"status:": "download fuunction executed"}), 200
 
 
 def start_flask():
     app.run(host="0.0.0.0", port=7777, debug=False)
+
 
 if __name__ == "__main__":
     
