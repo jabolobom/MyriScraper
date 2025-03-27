@@ -48,11 +48,12 @@ html, body {
 .side-bar{
     color: #F8F1EF;
     font-size: 20px;
-    min-width: 250px;
+    min-width: 299px;
     background-color: #3572B6;
     outline: 2px solid black;
     box-shadow: 6px 6px 0 black;
     margin: 10px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -64,7 +65,7 @@ html, body {
     background-color: #00AB9F;
 }
 
-input[type="checkbox"] {
+/* input[type="checkbox"] {
     appearance: none;
     width: 20px;
     height: 20px;
@@ -80,23 +81,61 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
     background-color: #DF0024;
     border: 2px solid black;
+} */
+
+.dropdown-menu{
+    font-family: 'VCR OSD Mono', sans-serif;
+    font-size: large;
+    text-align: center;
+    appearance: none;
+    width: 100%;
+    height: auto;
+    border: 3px solid black;
+    background-color: #F8F1EF;
+    position: relative;
+    vertical-align: middle;
+    padding: 2px;
 }
 
 label{
     user-select: none;
 }
 
+.selected-files{
+    color: #f8f8f8;
+    font-size: 15px;
+    min-width: 225px;
+    max-width: 225px;
+    flex-direction: column;
+    flex-grow: 1;
+    border: 2px solid black;
+    overflow: hidden;    
+    margin: 10px;
+    padding: 25px;
+}
+
 .settings-section{
-    color: #F8F1EF;
+    color: #000000;
     font-size: 20px;
     min-width: 250px;
     max-width: 250px;
-    background-color: #3572B6;
+    background-color: #00AB9F;
     outline: 2px solid black;
     box-shadow: 6px 6px 0 black;
     margin: auto 10px 10px 10px;
     padding: 5px;
-    overflow: scroll;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.settings-section:hover{
+    background-color: #f8f8f8;
+}
+
+.settings-section:active{
+    transform: scale(0.9);
 }
 
 .search-section{
@@ -116,13 +155,13 @@ label{
 }
 
 .results{
-    display: flex
+    display: flex;
     background-color: #3572B6;
     flex-wrap: wrap;
     border: 3px solid black;
     flex-grow: 1;
     margin: 10px 25px 25px 10px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .result-card{
@@ -130,10 +169,10 @@ label{
     align-items: center;
     justify-content: space-between;
     background-color: #00AB9F;
-    width: 99%;
-    height: 10%;
-    margin: 10px;
-    font-size: 15px;
+    width: 100%;
+    height: auto;
+    margin: 3px;
+    font-size: 12px;
     border: 2px solid black;
 }
 
@@ -142,7 +181,7 @@ label{
 }
 
 .result-card label{
-    margin-left: 50px;
+    margin-left: auto;
     margin-right: 10px;
     font-size: 12px;
     background-color: #F8F1EF;
@@ -157,4 +196,21 @@ label{
 
 .result-card label:active{
     transform: scale(0.9);
+}
+
+::-webkit-scrollbar{
+	width: 10px;
+}
+
+::-webkit-scrollbar-track-piece{
+	opacity: 0;
+}
+
+::-webkit-scrollbar-thumb{
+	background-color: #f8f8f8;
+	outline: 2px solid #ffffff00;
+    border: 2px solid black;
+    border-radius: 10%;
+	outline-offset: -2px;
+    margin-left: 3px;
 }

@@ -12,16 +12,15 @@
 <div class="main">
     <div class="side-bar">
         <fieldset>
-        <label for="psx"><input type="checkbox" id="psx" value="psx" checked/>PSX</label>
-        <br>
-        <label for="ps2">  <input type="checkbox" id="ps2" value="ps2"/>PS2</label>
-        <br>
-        <label for="n64"> <input type="checkbox" id="n64" value="n64"/>N64</label>
-        <br>
+        <select name="source" class="dropdown-menu">
+            <option value="PSX">PSX</option>
+            <option value="PS2">PS2</option>
+            <option value="N64">N64</option>
+        </select>    
         </fieldset>
-        <div class="settings-section">
-            <div class="directory-selection"></div>
-            <div class="download-start" onclick="downloadButton()">start download</div>
+        <div class="selected-files"></div>
+        <div class="settings-section" onclick="downloadButton()">
+            <label>START DOWNLOAD</label>
         </div>
     </div>
     <div class="search-section">

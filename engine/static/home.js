@@ -14,6 +14,7 @@ function addQueue (title_name) { // adds titles to queue, no duplicates.
 };
 
 async function downloadButton(download_array){
+  var function_lock = true
   // sends title json to backend 
   try {
     const rqst = new Request("/download", {
@@ -28,12 +29,14 @@ async function downloadButton(download_array){
 
     if(!response.ok){
       throw new Error(`Error, Status: ${response.status}`);
+      function_lock = false
     }
 
     const result = await response.json();
     console.log("Server resp:", result);
     localStorage.removeItem("downloadlist");
     downloadlist.length = 0;
+    function_lock = false
   } catch (error) {
     console.error("error:", error);
   }
