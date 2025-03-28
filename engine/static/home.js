@@ -1,4 +1,5 @@
 var downloadlist = JSON.parse(localStorage.getItem("downloadlist")) || []; // array de titulos, salva no localStorage
+const resultelement = document.getElementById("result-list");
 
 function addQueue (title_name) { // adds titles to queue, no duplicates.
     console.log(`trying to add ${JSON.stringify(title_name)} to queue`)
@@ -11,7 +12,25 @@ function addQueue (title_name) { // adds titles to queue, no duplicates.
         localStorage.setItem("downloadlist", JSON.stringify(downloadlist)) // salva no local storage
         console.log(`New download queue: ${downloadlist.toString()}`);
     };
+
+    updateList();
+
 };
+
+function updateList(){
+  const resultelement = document.getElementById("result-list");
+  if (!resultelement) return; // se não tiver ignora,
+
+  resultelement.innerHTML = "";
+
+  downloadlist.forEach(item => { // pra cada x da lista
+    const li = document.createElement("li"); // cria bullet point
+    li.textContent = item;
+    resultelement.appendChild(li);
+  })
+
+}
+
 
 async function downloadButton(download_array){
   var function_lock = true

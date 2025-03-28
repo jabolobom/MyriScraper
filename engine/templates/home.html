@@ -13,12 +13,16 @@
     <div class="side-bar">
         <fieldset>
         <select name="source" class="dropdown-menu">
+            <option value="" disabled selected>SELECT YOUR SOURCE</option>
             <option value="PSX">PSX</option>
             <option value="PS2">PS2</option>
             <option value="N64">N64</option>
         </select>    
         </fieldset>
-        <div class="selected-files"></div>
+        <!-- MEXER NESSE UL HORROROSO -->
+        <div class="selected-files">
+            <ul id="result-list"> </ul>
+        </div>
         <div class="settings-section" onclick="downloadButton()">
             <label>START DOWNLOAD</label>
         </div>

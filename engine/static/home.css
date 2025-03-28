@@ -121,12 +121,14 @@ label{
     max-width: 250px;
     background-color: #00AB9F;
     outline: 2px solid black;
-    box-shadow: 6px 6px 0 black;
+    box-shadow: 0 6px 0 black;
     margin: auto 10px 10px 10px;
     padding: 5px;
     overflow: hidden;
     align-items: center;
     justify-content: center;
+    align-self: center;
+    justify-self: center;
     transition: transform 0.1s ease, background 0.1s ease;
 }
 

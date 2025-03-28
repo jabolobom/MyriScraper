@@ -121,6 +121,6 @@ if __name__ == "__main__":
     t.daemon = True
     t.start()
 
-    window = webview.create_window("Scripted Download", "http://127.0.0.1:7777")
+    window = webview.create_window("Scripted Download", "http://127.0.0.1:7777", min_size=(800, 800))
     webview.start(debug=True) # trava a execução do código pós isso
     sys.exit()
