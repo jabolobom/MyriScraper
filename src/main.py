@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_wtf import FlaskForm
-import requests, webview, threading, sys, os
+import requests, webview, threading, sys, os, shutil
+from requests.exceptions import ChunkedEncodingError, ConnectionError
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
@@ -66,16 +67,34 @@ def title_search(user_search: str):
         return
     
 
-def title_downloader(title, save_path):
-    download = requests.get(url_dictionary[title])
+def title_downloader(title, save_path, retries=5, chunk_size=1024*1024*8):
+    url = url_dictionary[title]
     fullpath = os.path.join(save_path, title)
 
-    if not download:
-        print("download error")
-        return
+    attempt = 0
+    while attempt < retries:
+        try:
+            pos = os.path.getsize(fullpath) if os.path.exists(fullpath) else 0
+            headers = {"Range": f"bytes={pos}-"} if pos else None
 
-    with open(fullpath, 'wb') as file:
-        file.write(download.content)
+            with requests.get(url, stream=True, headers=headers, timeout=30) as r:
+                r.raise_for_status()
+                mode = "ab" if pos else "wb" # if resuming, "ab" append to existing file, else write new
+                with open(fullpath, mode) as f:
+                    for chunk in r.iter_content(chunk_size=chunk_size):
+                        if chunk:
+                            f.write(chunk)
+
+            print(f"Finished {title} to {fullpath}")
+            return fullpath
+
+        except (ChunkedEncodingError, ConnectionError, ConnectionResetError) as e:
+            attempt += 1
+            print(f"Download error: {e}, retrying ({attempt}/{retries})...")
+            time.sleep(3)
+
+    raise Exception(f"Download failed after {retries} retries: {title}")
+
 
 
 def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILES, MESMO SENDO 1 SÓ !!!!!!!!!!!!!!
@@ -93,7 +112,6 @@ def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILE
         print(f"DOWNLOAD STARTED FILE: {i}")
     for i in selected:
         threads[i].join()
-        print(f"\nfinished downloading {i} to {save_path}")
 
 ### FLASK CONFIG ###
 SECRET_KEY = os.urandom(32)
