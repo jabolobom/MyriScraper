@@ -1,20 +1,13 @@
 from flask import Flask, request, jsonify, render_template
 from flask_wtf import FlaskForm
-import requests, webview, threading, sys, os, shutil
+import requests, webview, threading, sys, os
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
-
 from forms import sourcesForm
 
-url_dictionary = dict()
-result_list = list()
-default_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/"
-sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/", 
-           'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
-           'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
-
+# would be good to put those functions on another file and import it, main is getting too crowded
 def getSource(url):
     if url == None:
         url = default_url
@@ -41,14 +34,15 @@ def getSource(url):
     print("List ready", url_dictionary)
     return url_dictionary
 
-if os.path.isdir('downloads/'):
-    print(f"Downloads folder exists. Continuing...")
-else:
-    os.mkdir('downloads/')
-    print(f"Downloads directory not found, directory created")
+def check_download_folder():
+    if os.path.isdir('downloads/'):
+        print(f"Downloads folder exists. Continuing...")
+    else:
+        os.mkdir('downloads/')
+        print(f"Downloads directory not found, directory created")
 
-download_path = 'downloads/'
-
+    download_path = 'downloads/'
+    return download_path
 
 def title_search(user_search: str):
     result_list.clear()
@@ -96,7 +90,6 @@ def title_downloader(title, save_path, retries=5, chunk_size=1024*1024*8):
     raise Exception(f"Download failed after {retries} retries: {title}")
 
 
-
 def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILES, MESMO SENDO 1 SÓ !!!!!!!!!!!!!!
     threads = {}
 
@@ -118,10 +111,11 @@ SECRET_KEY = os.urandom(32)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
+def start_flask():
+    app.run(host="0.0.0.0", port=7777, debug=False)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    getSource(None)
     form = sourcesForm()
     selected_source = None
     if form.validate_on_submit():
@@ -153,17 +147,22 @@ def download():
 
     return jsonify({"status:": "download fuunction executed"}), 200
 
-
-def start_flask():
-    app.run(host="0.0.0.0", port=7777, debug=False)
-
-
 if __name__ == "__main__":
     
     t = threading.Thread(target=start_flask)
     t.daemon = True
     t.start()
 
+    ## variables; could also be in a separate environment file ##
+    download_path = check_download_folder()
+    url_dictionary = dict()
+    result_list = list()
+    default_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/" # should remove later...
+    sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/",
+               'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
+               'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
+    getSource(None) # should think of making warnings when no source is slected. Stop using psx as default source...
+
     window = webview.create_window("Scripted Download", "http://127.0.0.1:7777", min_size=(800, 800))
-    webview.start(debug=True) # trava a execução do código pós isso
+    webview.start(debug=True) # trava a execução do código pós isso // faz o que tem que fazer antes, depois só dentro do flask
     sys.exit()
