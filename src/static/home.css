@@ -216,3 +216,20 @@ label{
 	outline-offset: -2px;
     margin-left: 3px;
 }
+
+.Loading{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 85%;
+    background: #00AB9F;
+    opacity: 0.9;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    box-shadow: 5px 5px 0 black;
+}

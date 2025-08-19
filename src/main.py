@@ -1,30 +1,44 @@
 from flask import Flask, request, jsonify, render_template
+from flask_wtf import FlaskForm
 import requests, webview, threading, sys, os
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
 
+from forms import sourcesForm
+
 url_dictionary = dict()
 result_list = list()
-PSX_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/"
+default_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/"
 sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/", 
            'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
            'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
 
-try:
-    response = requests.get(PSX_url) # TEMPORARY, CHANGE THIS!!!!!!!!!!!1
-    soup = BeautifulSoup(response.text, 'html.parser')
-    links = soup.find_all('a') # get all links (not ideal, but works for every page in myrient)
-except Exception as e:
-    print(e)
+def getSource(url):
+    if url == None:
+        url = default_url
+    else:
+        url = sources[url]
 
-for element in links:
-    if 'title' in element.attrs and 'href' in element.attrs: # "title" is the attr used in the html page
-        truelink = urljoin(PSX_url, element['href'])
-        gameTitle = element['title'].upper().strip()
+    url_dictionary.clear()
 
-        url_dictionary[gameTitle] = truelink # title : download-link
+    try:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        links = soup.find_all('a')  # get all links (not ideal, but works for every page in myrient)
+    except Exception as e:
+        print(e)
 
+    for element in links:
+        if 'title' in element.attrs and 'href' in element.attrs:  # "title" is the attr used in the html page
+            truelink = urljoin(url, element['href'])
+            gameTitle = element['title'].upper().strip()
+
+            url_dictionary[gameTitle] = truelink  # title : download-link
+
+
+    print("List ready", url_dictionary)
+    return url_dictionary
 
 if os.path.isdir('downloads/'):
     print(f"Downloads folder exists. Continuing...")
@@ -33,9 +47,6 @@ else:
     print(f"Downloads directory not found, directory created")
 
 download_path = 'downloads/'
-
-
-print("dictionary created")
 
 
 def title_search(user_search: str):
@@ -84,23 +95,37 @@ def download_request(selected, save_path): # SEMPRE REQUISITAR UMA LISTA DE FILE
         threads[i].join()
         print(f"\nfinished downloading {i} to {save_path}")
 
+### FLASK CONFIG ###
+SECRET_KEY = os.urandom(32)
 app = Flask(__name__)
+app.config['SECRET_KEY'] = SECRET_KEY
 
-@app.route('/')
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html")
+    getSource(None)
+    form = sourcesForm()
+    selected_source = None
+    if form.validate_on_submit():
+        selected_source = form.source.data
+        url_dictionary = getSource(selected_source)
+
+
+    return render_template("home.html", form=form)
 
 
 @app.route('/search', methods=["POST"])
 def search():
     user_search = request.form.get("gametitle")
+    form= sourcesForm()
 
     if not user_search:
-        return render_template("home.html")
+        return render_template("home.html", form=form)
+
 
     search_results = title_search(user_search)
     print(search_results)
-    return render_template("home.html", results=search_results)
+    return render_template("home.html",form=form, results=search_results)
 
 
 @app.route('/download', methods=["POST"])

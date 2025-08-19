@@ -10,15 +10,16 @@
 <body>
 <div class="top-bar"><h1 class=".VCROSD">SCRIPTED DOWNLOADER</h1></div>
 <div class="main">
+    <div class="Loading" id="Loading">Loading source...</div>
     <div class="side-bar">
+
         <fieldset>
-        <select name="source" class="dropdown-menu">
-            <option value="" disabled selected>SELECT YOUR SOURCE</option>
-            <option value="PSX">PSX</option>
-            <option value="PS2">PS2</option>
-            <option value="N64">N64</option>
-        </select>    
+        <form method ='POST' action="/" id="source-form">
+            {{ form.hidden_tag() }}
+            {{ form.source(class="dropdown-menu", onchange="showLoading()") }}
+        </form>
         </fieldset>
+
         <!-- MEXER NESSE UL HORROROSO -->
         <div class="selected-files">
             <ul id="result-list"> </ul>

@@ -59,5 +59,11 @@ async function downloadButton(download_array){
   } catch (error) {
     console.error("error:", error);
   }
-  
+};
+
+function showLoading(){
+      console.log("showloading run")
+      document.getElementById("Loading").style.display = "flex";
+      document.getElementById("source-form").submit();
+
 };
