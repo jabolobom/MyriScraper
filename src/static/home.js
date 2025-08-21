@@ -67,3 +67,8 @@ function showLoading(){
       document.getElementById("source-form").submit();
 
 };
+
+function hideModal(){
+    console.log("Hide modal")
+    document.getElementById("warning_visible").style.display = 'none';
+};

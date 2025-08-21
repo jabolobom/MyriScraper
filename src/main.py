@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from flask_wtf import FlaskForm
 import requests, webview, threading, sys, os
 from requests.exceptions import ChunkedEncodingError, ConnectionError
@@ -10,7 +10,7 @@ from forms import sourcesForm
 # would be good to put those functions on another file and import it, main is getting too crowded
 def getSource(url):
     if url == None:
-        url = default_url
+        return False
     else:
         url = sources[url]
 
@@ -32,6 +32,7 @@ def getSource(url):
 
 
     print("List ready", url_dictionary)
+    is_source_selected = True
     return url_dictionary
 
 def check_download_folder():
@@ -120,24 +121,42 @@ def home():
     selected_source = None
     if form.validate_on_submit():
         selected_source = form.source.data
-        url_dictionary = getSource(selected_source)
+        session['selected_source'] = selected_source
+        if url_dictionary == getSource(selected_source):
+            global is_source_selected
+            is_source_selected = True
+
+    if is_source_selected:
+        show_warning = True
+    else:
+        show_warning = False
 
 
-    return render_template("home.html", form=form)
+    return render_template("home.html", form=form, show_warning=show_warning)
 
 
 @app.route('/search', methods=["POST"])
 def search():
     user_search = request.form.get("gametitle")
     form= sourcesForm()
+    form.source.data = session.get('selected_source')
+
+    global is_source_selected
+
+    if is_source_selected:
+        show_warning = True
+    else:
+        show_warning = False
 
     if not user_search:
         return render_template("home.html", form=form)
 
 
+
+
     search_results = title_search(user_search)
     print(search_results)
-    return render_template("home.html",form=form, results=search_results)
+    return render_template("home.html",form=form, results=search_results, show_warning=show_warning)
 
 
 @app.route('/download', methods=["POST"])
@@ -161,7 +180,9 @@ if __name__ == "__main__":
     sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/",
                'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
                'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
-    getSource(None) # should think of making warnings when no source is slected. Stop using psx as default source...
+    is_source_selected = False
+    getSource(None)
+     # should think of making warnings when no source is slected. Stop using psx as default source...
 
     window = webview.create_window("Scripted Download", "http://127.0.0.1:7777", min_size=(800, 800))
     webview.start(debug=True) # trava a execução do código pós isso // faz o que tem que fazer antes, depois só dentro do flask

@@ -43,6 +43,11 @@
         {% endif %}
     </div>
     </div>
+
+    <div class="source_warning" id="{{ 'warning_hidden' if show_warning else "warning_visible" }}">
+        <h2>No source selected. Choose one in the dropdown to start downloading</h2>
+        <span class="modal_close" onclick="hideModal()">Ok</span>
+    </div>
 </div>
 
 </body>
