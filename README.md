@@ -1,6 +1,8 @@
 
 # MyriScraper
-Myrient scraping tool using beautiful soup to get all the download links from selected source. Downloads are handled by the Requests lib. All is wrapped on a flask server page with Pywebview.
+Myrient scraping tool aiming to make searching and downloading from the website easier. It also lets you to download files in batch!
+
+It uses beautiful soup to get all the download links from selected source. Downloads are handled by the Requests lib. All is wrapped on a flask server page with Pywebview.
 ## Warning
 MyriScraper is not ready yet! it allows you to search and download for files, but theres no progress bar yet!
 
