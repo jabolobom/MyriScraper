@@ -58,7 +58,7 @@ def title_search(user_search: str):
         filter_results = [(key, value) for key, value in fuzzy_results if value >= 80]
         return filter_results # list of tuples
     else:
-        print("No results found") # PLACEHOLDER !!!!!!!!!!!!!!!!!!!
+        print("No results found")
         return
     
 
@@ -152,8 +152,6 @@ def search():
         return render_template("home.html", form=form)
 
 
-
-
     search_results = title_search(user_search)
     print(search_results)
     return render_template("home.html",form=form, results=search_results, show_warning=show_warning)
@@ -176,14 +174,12 @@ if __name__ == "__main__":
     download_path = check_download_folder()
     url_dictionary = dict()
     result_list = list()
-    default_url = "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/" # should remove later...
     sources = {'PSX': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation/",
                'PS2': "https://myrient.erista.me/files/Redump/Sony%20-%20PlayStation%202/",
                'N64': "https://myrient.erista.me/files/No-Intro/Nintendo%20-%20Nintendo%2064%20%28BigEndian%29/"}
     is_source_selected = False
     getSource(None)
-     # should think of making warnings when no source is slected. Stop using psx as default source...
 
-    window = webview.create_window("Scripted Download", "http://127.0.0.1:7777", min_size=(800, 800))
+    window = webview.create_window("MyriScraper", "http://127.0.0.1:7777", min_size=(800, 800))
     webview.start(debug=True) # trava a execução do código pós isso // faz o que tem que fazer antes, depois só dentro do flask
     sys.exit()
