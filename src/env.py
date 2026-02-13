@@ -1,0 +1,1 @@
+DEFAULT_DOWNLOAD_PATH = "downloads/"
