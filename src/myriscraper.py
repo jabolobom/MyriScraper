@@ -1,12 +1,10 @@
-import requests, os, threading
+import requests
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
-import env
-
+from urllib.parse import urljoin
 
 class MyriScraper:
-    def __init__(self, download_path: str, url_dictionary: dict, result_list: list, sources: dict, is_source_selected: bool):
-        self.download_path = env.DEFAULT_DOWNLOAD_PATH
+    def __init__(self, url_dictionary: dict, result_list: list, sources: dict, is_source_selected: bool):
         self.url_dictionary = url_dictionary
         self.result_list = result_list
         self.sources = sources
@@ -39,15 +37,6 @@ class MyriScraper:
 
         return self.url_dictionary
     
-    def check_download_folder(self):
-        if os.path.isdir(self.download_path):
-            print(f"Downloads folder exists. Continuing...")
-        else:
-            os.mkdir('downloads/')
-            print(f"Downloads directory not found, directory created")
-
-        return self.download_path
-    
     def title_search(self, user_search: str): # TODO: check if there isnt a better way to do this, as were not using flask anymore
         self.result_list.clear()
 
@@ -70,23 +59,3 @@ class MyriScraper:
         else:
             print("No results found") # TODO: make a callback function to show error/sucess messages
             return
-        
-    def title_downloader(self, title): #TODO: MAKE THIS
-        pass 
-
-    def download_request(self, selected):
-        threads = {}
-
-        if type(selected) != list: # TODO: another callback usage
-            print("ERROR: NOT A LIST! BREAKING PROCESS")
-            return
-        
-        for i in selected:
-            threads[i] = threading.Thread(target=self.title_downloader, args=(i.upper(), self.download_path))
-            print(f"NEW THREAD FILE: {i}")
-        for i in selected:
-            threads[i].start()
-            print(f"DOWNLOAD STARTED FILE: {i}")
-        for i in selected:
-            threads[i].join()
-
