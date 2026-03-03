@@ -1,22 +1,23 @@
 import requests
+import env
 from bs4 import BeautifulSoup
 from fuzzywuzzy import process
 from urllib.parse import urljoin
 
 class MyriScraper:
-    def __init__(self, url_dictionary: dict, result_list: list, sources: dict, is_source_selected: bool):
-        self.url_dictionary = url_dictionary
+    def __init__(self, files_dictionary: dict, result_list: list, sources: dict):
+        self.files_dictionary = files_dictionary
         self.result_list = result_list
         self.sources = sources
         self.is_source_selected = False
 
-    def getSource(self, url):
-        if url == None:
+    def getSource(self, tag):
+        if tag == None:
             return False
         else:
-            url = self.sources[url]
+            url = self.sources[tag]
 
-        self.url_dictionary.clear() # clears anything that was there before
+        self.files_dictionary.clear() # clears anything that was there before
 
         try: 
             response= requests.get(url)
@@ -30,27 +31,26 @@ class MyriScraper:
                 truelink = urljoin(url, element['href'])
                 gameTitle = element['title'].upper().strip()
 
-                self.url_dictionary[gameTitle] = truelink # title: download-link
+                self.files_dictionary[gameTitle] = truelink # title: download-link
 
-        print("List ready", self.url_dictionary)
         self.is_source_selected = True
 
-        return self.url_dictionary
+        return self.files_dictionary
     
     def title_search(self, user_search: str): # TODO: check if there isnt a better way to do this, as were not using flask anymore
         self.result_list.clear()
 
-        if not self.url_dictionary: return # early return if theres not a dict
+        if not self.files_dictionary: return # early return if theres not a dict
 
-        substring_results = [title for title in self.url_dictionary.keys() if user_search.upper() in title]
+        substring_results = [title for title in self.files_dictionary.keys() if user_search.upper() in title]
 
         if substring_results:
             for name in substring_results: # for x matching title
-                self.result_list.append((name, self.url_dictionary[name])) # append (title, urldict value) tuple
+                self.result_list.append((name, self.files_dictionary[name])) # append (title, urldict value) tuple
 
             return self.result_list
         elif not substring_results:
-            fuzzy_results = process.extract(user_search.upper(), self.url_dictionary.keys(), limit=100)
+            fuzzy_results = process.extract(user_search.upper(), self.files_dictionary.keys(), limit=100)
             filter_results = [(key, value) for key, value in fuzzy_results if value >= 80]
             
             self.result_list = filter_results

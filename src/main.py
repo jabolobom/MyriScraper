@@ -2,9 +2,18 @@ from myridownloader import MyriDownloader
 from myriscraper import MyriScraper
 from tkinter import *
 from tkinter import ttk
+import env
 
 # UI CODE HERE + summon myriscraper
 def main():
+
+    # SCRAPER AND DOWNLOADER INITIALIZE
+    myriscraper = MyriScraper(
+        files_dictionary={},
+        result_list=[],
+        sources=env.SOURCES,
+    )
+
     # ROOT TK
     root = Tk()
     root.title("Myriscraper Test")
@@ -36,10 +45,10 @@ def main():
 
     # SEARCH BAR
     searchinput = StringVar()
-    ttk.Label(mainframe, text="Search for a file: ", anchor="n").grid(row=0, column=2, sticky="ns", columnspan=2)
-    usrinput = ttk.Entry(mainframe, textvariable=searchinput).grid(row=1, column=2, columnspan=3, sticky="nsew")
+    ttk.Label(mainframe, text="Search for a file: ", anchor="n").grid(row=0, column=2, sticky="ns", columnspan=3)
+    ttk.Entry(mainframe, textvariable=searchinput).grid(row=1, column=2, columnspan=3, sticky="nsew")
 
-    # make a button here
+    ttk.Button(mainframe, text="Search", command=lambda: searchdict(myriscraper, selectedsrc, searchinput)).grid(row=2, column=3, sticky="nsew")
 
     # RESULTS FRAME
     resultsframe = Frame(mainframe, bg="white", highlightbackground="black", highlightthickness=1)
@@ -62,11 +71,15 @@ def main():
     
     root.mainloop()
 
-def searchdict(entrypoint):
-    usrin = entrypoint.get()
-    # do something
-    pass
+def searchdict(scraper, activesource, userentry):
+    # firstly, needs to get the active source,
+    scraper.getSource(activesource.get())
 
+    # searches for the file typed in the entrybox
+    file = scraper.title_search(userentry.get())
+    
+    # substitues listbox entries with results
+    
 
 if __name__ == "__main__":
     main()
