@@ -36,12 +36,14 @@ def main():
 
     # SEARCH BAR
     searchinput = StringVar()
-    ttk.Label(mainframe, text="Search for a file: ", anchor="n").grid(row=2, column=3, sticky="nsew", columnspan=2)
-    ttk.Entry(mainframe, textvariable=searchinput).grid(row=3, column=2, columnspan=3, sticky="nsew")
+    ttk.Label(mainframe, text="Search for a file: ", anchor="n").grid(row=0, column=2, sticky="ns", columnspan=2)
+    usrinput = ttk.Entry(mainframe, textvariable=searchinput).grid(row=1, column=2, columnspan=3, sticky="nsew")
+
+    # make a button here
 
     # RESULTS FRAME
     resultsframe = Frame(mainframe, bg="white", highlightbackground="black", highlightthickness=1)
-    resultsframe.grid(row=0, column=3, sticky="nsew", padx=(10,0))
+    resultsframe.grid(row=6, column=0, columnspan=5, sticky="nsew", pady=(10,0))
     for i in range(3):
         resultsframe.columnconfigure(i, weight=1)
     for i in range(3):
@@ -59,6 +61,12 @@ def main():
     listbox.insert("end", "file2.zip")
     
     root.mainloop()
+
+def searchdict(entrypoint):
+    usrin = entrypoint.get()
+    # do something
+    pass
+
 
 if __name__ == "__main__":
     main()
